@@ -14,26 +14,12 @@ def print_board():
 
 
 def set_position(board, xy_pos, player):
-    try:
-        xy_array = xy_pos.split(',')
-        x = int(xy_array[0])
-        y = int(xy_array[1])
-        if x < 0 or x > 2 or y < 0 or y > 2:
-            print "Invalid position"
-        if board[y][x] == "-" or player == "-":
-            board[y][x] = player
-        else:
-            print "Position already occupied"
-    except ValueError:
-        print("That was not a valid position, please provide integers between 0 and 2 in the format x, y")
-
-
-def set_human_position(board, player):
     position_set = False
     while not position_set:
-        position = raw_input("Provide x, y position: ")
+        if xy_pos == "":
+            xy_pos = raw_input("Provide x, y position: ")
         try:
-            xy_array = position.split(',')
+            xy_array = xy_pos.split(',')
             x = int(xy_array[0])
             y = int(xy_array[1])
             if x < 0 or x > 2 or y < 0 or y > 2:
@@ -45,6 +31,8 @@ def set_human_position(board, player):
                 position_set = True
         except ValueError:
             print("That was not a valid position, please provide integers between 0 and 2 in the format x, y")
+        if not player == humanPlayer:
+            return
 
 
 def board_is_full():
@@ -146,7 +134,7 @@ while not board_is_full():
         set_position(board_in_play, str(computer_move[1]) + "," + str(computer_move[0]), computerPlayer)
         computer_next = False
     else:
-        set_human_position(board_in_play, humanPlayer)
+        set_position(board_in_play, "", humanPlayer)
         computer_next = True
     print_board()
     if winner(board_in_play, humanPlayer):
