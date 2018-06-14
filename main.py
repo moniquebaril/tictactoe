@@ -35,14 +35,14 @@ def set_position(board, xy_pos, player):
             return
 
 
-def board_is_full():
+def is_board_full():
     for row in board_in_play:
         if "-" in row:
             return False
     return True
 
 
-def winner(board, player):
+def is_winner(board, player):
     for row in board:
         if row == [player, player, player]:
             return True
@@ -56,7 +56,7 @@ def winner(board, player):
     return False
 
 
-def empty_spots(board):
+def get_empty_spots(board):
     empties = []
     for row in range(0, 3):
         for col in range(0, 3):
@@ -65,12 +65,12 @@ def empty_spots(board):
     return empties
 
 
-def compute_next_move(board, player):
-    available_positions = empty_spots(board)
+def compute_next_ai_move(board, player):
+    available_positions = get_empty_spots(board)
     moves = []
-    if winner(board, humanPlayer):
+    if is_winner(board, humanPlayer):
         return -1
-    elif winner(board, computerPlayer):
+    elif is_winner(board, computerPlayer):
         return 1
     elif len(available_positions) == 0:
         return 0
@@ -78,9 +78,9 @@ def compute_next_move(board, player):
         new_board = [list(board[0]), list(board[1]), list(board[2])]
         set_position(new_board, str(available_position[1]) + "," + str(available_position[0]), player)
         if player == computerPlayer:
-            result = compute_next_move(new_board, humanPlayer)
+            result = compute_next_ai_move(new_board, humanPlayer)
         else:
-            result = compute_next_move(new_board, computerPlayer)
+            result = compute_next_ai_move(new_board, computerPlayer)
         if result == -1 or result == 0 or result == 1:
             moves.append([available_position, result])
         else:
@@ -102,7 +102,7 @@ def compute_next_move(board, player):
 
 
 def compute_next_random_move(board):
-    available_positions = empty_spots(board)
+    available_positions = get_empty_spots(board)
     return available_positions[randint(0, len(available_positions) - 1)]
 
 
@@ -122,14 +122,14 @@ if computer_next:
     print("Computer goes first.")
 else:
     print("You go first. Please provide integers between 0 and 2 in the format x, y")
-while not board_is_full():
+while not is_board_full():
     if computer_next:
         print("Computer's turn...")
-        if len(empty_spots(board_in_play)) == 9 or ai == "R":
+        if len(get_empty_spots(board_in_play)) == 9 or ai == "R":
             computer_move = compute_next_random_move(board_in_play)
         else:
             temp_board = [list(board_in_play[0]), list(board_in_play[1]), list(board_in_play[2])]
-            next_move = compute_next_move(temp_board, computerPlayer)
+            next_move = compute_next_ai_move(temp_board, computerPlayer)
             computer_move = next_move[0]
         set_position(board_in_play, str(computer_move[1]) + "," + str(computer_move[0]), computerPlayer)
         computer_next = False
@@ -137,12 +137,12 @@ while not board_is_full():
         set_position(board_in_play, "", humanPlayer)
         computer_next = True
     print_board()
-    if winner(board_in_play, humanPlayer):
+    if is_winner(board_in_play, humanPlayer):
         print("Winner Winner Chicken Dinner! You WIN! You beat me.")
         exit(0)
-    if winner(board_in_play, computerPlayer):
+    if is_winner(board_in_play, computerPlayer):
         print("I WIN! MUHAHAHHAA...")
         exit(0)
-    if board_is_full():
+    if is_board_full():
         break
 print("Cat's Game! That was fun.")
