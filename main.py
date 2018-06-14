@@ -20,15 +20,12 @@ def set_position(board, xy_pos, player):
         y = int(xy_array[1])
         if x < 0 or x > 2 or y < 0 or y > 2:
             print "Invalid position"
-            return board
         if board[y][x] == "-" or player == "-":
             board[y][x] = player
         else:
             print "Position already occupied"
     except ValueError:
         print("That was not a valid position, please provide integers between 0 and 2 in the format x, y")
-        return board
-    return board
 
 
 def set_human_position(board, player):
@@ -48,7 +45,6 @@ def set_human_position(board, player):
                 position_set = True
         except ValueError:
             print("That was not a valid position, please provide integers between 0 and 2 in the format x, y")
-    return board
 
 
 def board_is_full():
@@ -92,7 +88,7 @@ def compute_next_move(board, player):
         return 0
     for available_position in available_positions:
         new_board = [list(board[0]), list(board[1]), list(board[2])]
-        new_board = set_position(new_board, str(available_position[1]) + "," + str(available_position[0]), player)
+        set_position(new_board, str(available_position[1]) + "," + str(available_position[0]), player)
         if player == computerPlayer:
             result = compute_next_move(new_board, humanPlayer)
         else:
@@ -147,10 +143,10 @@ while not board_is_full():
             temp_board = [list(board_in_play[0]), list(board_in_play[1]), list(board_in_play[2])]
             next_move = compute_next_move(temp_board, computerPlayer)
             computer_move = next_move[0]
-        board_in_play = set_position(board_in_play, str(computer_move[1]) + "," + str(computer_move[0]), computerPlayer)
+        set_position(board_in_play, str(computer_move[1]) + "," + str(computer_move[0]), computerPlayer)
         computer_next = False
     else:
-        board_in_play = set_human_position(board_in_play, humanPlayer)
+        set_human_position(board_in_play, humanPlayer)
         computer_next = True
     print_board()
     if winner(board_in_play, humanPlayer):
